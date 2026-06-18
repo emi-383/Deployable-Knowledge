@@ -3,7 +3,7 @@ $ErrorActionPreference = "Stop"
 $repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $repoRoot
 
-$venvPath = Join-Path $repoRoot "venv"
+$venvPath = Join-Path $repoRoot ".venv"
 $pythonExe = Join-Path $venvPath "Scripts\python.exe"
 $pipExe = Join-Path $venvPath "Scripts\pip.exe"
 $modelDir = Join-Path $repoRoot "tmp_model"

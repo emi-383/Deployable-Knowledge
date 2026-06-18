@@ -170,6 +170,10 @@ def run_bm(query, top_k, exclude_sources):
     
     #Testing query 
     #query = testQuery()
+
+    # Prevent internal server error msg
+    if not corpus:
+        return []
     
     corpusIndex = tokenizeCorpus(corpus)
     queryTokens = tokenizeQuery(query)
