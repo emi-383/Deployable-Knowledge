@@ -19,8 +19,7 @@ This is only the semantic search layer.
 It does **not** handle:
 
 - BM25 retrieval
-- hybrid merging
-- BERT / cross-encoder reranking
+- BERT cross-encoder reranking
 - UI wiring
 
 Those can plug in later on top of this module.

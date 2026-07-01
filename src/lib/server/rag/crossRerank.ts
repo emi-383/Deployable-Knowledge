@@ -54,7 +54,7 @@ function mergeDocuments(bm25Rank: Document[], vectorRank: Document[]): Map<strin
   return docs;
 }
 
-export async function reRankData(
+export async function crossReranked(
   query: string,
   bm25Rank: Document[],
   vectorRank: Document[],

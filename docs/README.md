@@ -1,5 +1,8 @@
 # Documentation
 
+- [Quick-start](../launcher.bat)
+For easy startup in one step, enter in terminal: `./launcher.bat`
+
 - [Architecture](ARCHITECTURE.md)
 - [API reference](API_REFERENCE.md)
 - [UI overview](UI_OVERVIEW.md)
