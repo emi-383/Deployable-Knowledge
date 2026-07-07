@@ -41,6 +41,7 @@
 		"sharp": "^0.34.5",
 		"stemmer": "^2.0.1",
 		"stopword": "^3.1.5",
+		"tesseract.js": "^7.0.0",
 		"voy-search": "^0.6.3",
 		"wink-bm25-text-search": "^3.1.2"
 	},

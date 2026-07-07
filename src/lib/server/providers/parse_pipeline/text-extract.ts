@@ -289,6 +289,8 @@ export async function TextExtract(
   const doc = await scribe.openDocument([file.path]);
 
   try {
+    //await doc.recognize({ langs: ["eng"] });
+
     const pages: Chunk[] = [];
     const pageCount = doc.ocr?.active?.length ?? 0;
 
@@ -300,6 +302,10 @@ export async function TextExtract(
       const textItems = buildTextItems(page, metrics, tableItems.map((item) => item.bbox), 50, 50, 50, 50);
       const items = [...textItems, ...tableItems].sort(rectSortKey);
       const content = items.map((item) => item.text).filter(Boolean).join("\n");
+
+      if (content) {
+        console.log(`[testing print] Page ${pageIndex + 1}:\n${content}`);
+      }
 
       pages.push({
         chunkType: "TEXT",
