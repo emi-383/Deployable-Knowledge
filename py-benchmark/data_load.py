@@ -32,7 +32,7 @@ def seed_dataset(script_dir: pathlib.Path) -> str:
     return data_path
 
 def py_to_ts(script_dir: pathlib.Path) -> None:
-    '''Store dataset_type in active_dataset.txt for prep_benchmark.ts to read'''
+    '''Store dataset_type in active_dataset.txt for benchmark_prep.ts to read'''
 
     transfer_path = os.path.join(script_dir, "active_dataset.txt")
     

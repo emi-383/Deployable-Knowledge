@@ -303,9 +303,9 @@ export async function TextExtract(
       const items = [...textItems, ...tableItems].sort(rectSortKey);
       const content = items.map((item) => item.text).filter(Boolean).join("\n");
 
-      if (content) {
-        console.log(`[testing print] Page ${pageIndex + 1}:\n${content}`);
-      }
+      //if (content) {
+      //  console.log(`[testing print] Page ${pageIndex + 1}:\n${content}`); // yay
+      //}
 
       pages.push({
         chunkType: "TEXT",
