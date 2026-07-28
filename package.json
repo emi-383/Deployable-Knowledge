@@ -14,7 +14,9 @@
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"benchmark-seed": "tsx benchmark_seed.ts",
+		"benchmark-prep": "tsx benchmark_prep.ts"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^7.0.1",
@@ -26,7 +28,7 @@
 		"drizzle-kit": "^0.31.10",
 		"svelte": "^5.55.2",
 		"svelte-check": "^4.4.6",
-		"tsx": "^4.22.4",
+		"tsx": "^4.23.0",
 		"typescript": "^6.0.2",
 		"vite": "^8.0.16"
 	},
@@ -41,6 +43,7 @@
 		"sharp": "^0.34.5",
 		"stemmer": "^2.0.1",
 		"stopword": "^3.1.5",
+		"tesseract.js": "^7.0.0",
 		"voy-search": "^0.6.3",
 		"wink-bm25-text-search": "^3.1.2"
 	},

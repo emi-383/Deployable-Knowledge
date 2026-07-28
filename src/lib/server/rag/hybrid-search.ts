@@ -6,7 +6,7 @@ import {
 } from "./semantic-search";
 import { searchBm25, type Bm25SearchMatch } from "./bm25-search";
 import {
-  reRankData,
+  crossReranked,
   type Document,
   type RerankedDocument,
 } from "./crossRerank";
@@ -123,7 +123,7 @@ export async function searchHybrid(options: HybridSearchOptions): Promise<Hybrid
   );
 
   const rerankStart = performance.now();
-  const reranked = await reRankData(
+  const reranked = await crossReranked(
     query,
     bm25.results.map((match) => toRerankDocument(match, "bm25Score")),
     semantic.results.map((match) => toRerankDocument(match, "semanticScore")),

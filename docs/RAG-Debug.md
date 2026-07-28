@@ -4,7 +4,7 @@ This file documents the retrieval debug path and how it is separate from the rea
 
 ## Current Chat RAG Path
 
-The actual UI chat answer path can use semantic, BM25, or hybrid retrieval.
+The UI chat answer path can use semantic, frequency, or hybrid (combined semantic + hybrid) retrieval.
 
 Flow:
 
@@ -87,6 +87,16 @@ Why it exists:
 
 This is intentionally separate from `bm25.ts` because the contributor BM25 file owns a process-level global index and startup seeding.
 
+### `src/lib/server/rag/crossRerank.ts`
+
+Query focused and semantic-based reranker, run by SBERT cross-encoder model.
+
+Why it exists:
+
+- replaced initial rerank tester, mathRerank.ts, for adaptive reranking
+- export function `crossReranked()`
+- used by `hybrid-search.ts`
+
 ### `src/lib/server/rag/hybrid-search.ts`
 
 Hybrid retrieval adapter.
@@ -94,8 +104,8 @@ Hybrid retrieval adapter.
 Why it exists:
 
 - runs semantic search and DB-backed BM25 search
-- passes both ranked lists into `mathRerank.ts`
-- returns combined debug rows with semantic rank, BM25 rank, and fused score
+- passes both ranked lists into `crossRerank.ts`
+- returns combined debug rows with semantic rank, BM25 rank, and fused ranking
 
 Current use:
 
@@ -120,10 +130,11 @@ Current limitation:
 
 ### `src/lib/server/rag/mathRerank.ts`
 
-Reusable math reranker.
+Math-based reranker.
 
 Current role:
 
+- initial rerank testing; replaced by crossRerank.ts
 - exposes `weightedReciprocalRankRerank(...)`
 - keeps legacy `reRankData(...)`
 - used by `hybrid-search.ts`
