@@ -25,10 +25,10 @@ async function runBenchmarkDump() {
 
     const activeDataset = fs.readFileSync(syncFilePath, 'utf-8').trim();
 
-    // Use the variable `activeDataset` instead of the string literal
+    // `active_dataset.txt` to pass the dataset type
     const queriesPath = path.join(benchmarkDir, 'data', activeDataset, 'queries.jsonl');
         
-    // Use `benchmarkDir` variable instead of hardcoded 'benchmarking'
+    // Use `benchmarkDir`
     const predDir = path.join(benchmarkDir, 'predictions');
     
     if (!fs.existsSync(predDir)) fs.mkdirSync(predDir, { recursive: true });
@@ -40,21 +40,26 @@ async function runBenchmarkDump() {
     const fileStream = fs.createReadStream(queriesPath);
     const rl = readline.createInterface({ input: fileStream, crlfDelay: Infinity });
     
-    console.log(` Running ${activeDataset.toUpperCase()} queries through RAG pipelines------`);
+    console.log(` Starting ${activeDataset.toUpperCase()} queries------`);
     
+    let i = 1;
     for await (const line of rl) {
         if (!line.trim()) continue;
         const queryData: DBQuery = JSON.parse(line);
         const qId = queryData._id;
         const qText = queryData.text;
     
-        // Evaluations
+        console.log(`Query ${i}: ${qText}`);
+
+        // Eval semantic
         const semResult: RagContextResult = await retrieveRagContext({ question: qText, topK: 100, mode: "semantic" });
         semanticPreds[qId] = {};
         semResult.matches.forEach(m => {
             semanticPreds[qId][m.documentId] = Math.max(semanticPreds[qId][m.documentId] || 0, m.score);
         });
     
+        console.log(`done semantic`);
+
         // Eval bm25
         const bm25Result: RagContextResult = await retrieveRagContext({ question: qText, topK: 100, mode: "bm25" });
         bm25Preds[qId] = {};
@@ -62,19 +67,24 @@ async function runBenchmarkDump() {
             bm25Preds[qId][m.documentId] = Math.max(bm25Preds[qId][m.documentId] || 0, m.score);
         });
     
+        console.log(`done bm25`);
+
         // Eval hybrid
         const hybridResult: RagContextResult = await retrieveRagContext({ question: qText, topK: 10, mode: "hybrid" });
         hybridPreds[qId] = {};
         hybridResult.matches.forEach(m => {
             hybridPreds[qId][m.documentId] = Math.max(hybridPreds[qId][m.documentId] || 0, m.score);
         });
+
+        console.log(`done hybird`);
+        i++;
     }
     
     fs.writeFileSync(path.join(predDir, 'semantic.json'), JSON.stringify(semanticPreds, null, 2));
     fs.writeFileSync(path.join(predDir, 'bm25.json'), JSON.stringify(bm25Preds, null, 2));
     fs.writeFileSync(path.join(predDir, 'hybrid.json'), JSON.stringify(hybridPreds, null, 2));
     
-    console.log(`Extraction done- Predictions written to py-benchmark/predictions/`);
+    console.log(`Querying done- results written to py-benchmark/predictions/`);
 }
     
 runBenchmarkDump().catch(console.error);

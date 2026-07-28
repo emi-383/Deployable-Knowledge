@@ -2,18 +2,19 @@ import os
 import pathlib
 from beir import util
 
-# Datasets and what they test:
-# "scifact" - scientific, technical, or fact verification
-# "hotpotqa" - multihop reasoning
-# "nfcorpus" - TREC-Covid: biomedical terminology
-# "nq" - Natural Questions: simulate real user general queries
+# Some datasets (more details in README):
+# "msmarco"    - general/web search; Bing queries
+# "nq"         - general/web search; Google queries and Wikipedia corpus
+# "trec-covid" - biomedical; covid-19 articles
+# "nfcorpus"   - biomedical; PubMed articles
+# "scifact"    - general scientific and fact checking; PubMed articles
 
 # Change below to adjust dataset used:
 DATASET_TYPE: str = "scifact"
 # ============================================================
 
-def seed_dataset(script_dir: pathlib.Path) -> str:
-    '''Prepare folder and beir dataset'''
+def load_dataset(script_dir: pathlib.Path) -> str:
+    '''Prepare folder and unzip dataset; can be skipped if manually download dataset'''
 
     # Root folder pointer
     data_dir = os.path.join(script_dir, "data")
@@ -25,7 +26,6 @@ def seed_dataset(script_dir: pathlib.Path) -> str:
     
     url = f"https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/{DATASET_TYPE}.zip"
     
-    print(f"Starting download and seed '{DATASET_TYPE}' dataset")
     # Extract the zip into new folder
     data_path = util.download_and_unzip(url, data_dir)
     print(f"Done at: {data_path}")
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     print(f'Current dataset type: {DATASET_TYPE}')
     try:
         script_dir = pathlib.Path(__file__).parent.absolute()
-        seed_dataset(script_dir)
+        load_dataset(script_dir)
         py_to_ts(script_dir)
     except Exception as e:
         print(f"\nData loading failed: {e}")

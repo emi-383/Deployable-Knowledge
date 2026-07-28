@@ -23,8 +23,8 @@ def get_data():
     with open(SYNC_FILE_PATH, "r", encoding="utf-8") as f:
         return f.read().strip()
 
-def load_ground_truth(dataset_name: str) -> Dict[str, Dict[str, int]]:
-    """Loads the official BEIR test annotations (qrels) for the given dataset"""
+def load_qrels(dataset_name: str) -> Dict[str, Dict[str, int]]:
+    """Loads BEIR answer keys (qrels) for the given dataset"""
     dataset_path = os.path.join(DATA_DIR, dataset_name)
 
     if not os.path.exists(dataset_path):
@@ -38,7 +38,7 @@ def load_ground_truth(dataset_name: str) -> Dict[str, Dict[str, int]]:
     return qrels
 
 def evaluator(branch_name: str, qrels: Dict[str, Dict[str, int]], output):
-    """Loads one retrieval branch and evals with BEIR metrics + outputs evals"""
+    """Loads one retrieval branch and evaluates"""
     file_path = os.path.join(PRED_DIR, f"{branch_name}.json")
 
     if not os.path.exists(file_path):
@@ -52,7 +52,7 @@ def evaluator(branch_name: str, qrels: Dict[str, Dict[str, int]], output):
 
     results: Dict[str, Dict[str, float]] = {}
     for qid in qrels.keys():
-        # If the TS pipeline missed a query, provide an empty dict '{}'
+        # If the RAG pipeline missed a query, provide an empty dict '{}'
         results[qid] = pred_results.get(qid, {})
 
     # Initialize BEIR evaluation class (pass None as model since we have precomputed results)
@@ -77,14 +77,13 @@ def evaluator(branch_name: str, qrels: Dict[str, Dict[str, int]], output):
 
 if __name__ == "__main__":
     active_dataset = get_data()
-    qrels = load_ground_truth(active_dataset)
+    qrels = load_qrels(active_dataset)
 
     script_dir = pathlib.Path(__file__).parent.absolute()
 
     output_file = open(f"{DATASET_TYPE}.txt", "w")
     output_file.write(f"{DATASET_TYPE} dataset: \n")
     
-    ##target_branches = ["semantic", "bm25"]
     target_branches = ["semantic", "bm25", "hybrid"]
     for branch in target_branches:
         evaluator(branch, qrels, output_file)
